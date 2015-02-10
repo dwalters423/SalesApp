@@ -1,0 +1,201 @@
+/**
+ *   P3_ReggieHaseltine.java - Demo servlet to do Oracle DB access and 
+ *                             return an XML file
+ */
+
+package CMIS;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringReader;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import javax.xml.parsers.*;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
+
+
+/**
+ *
+ * @author Reggie
+ */
+@WebServlet(name = "P3_ReggieHaseltine", urlPatterns = {"/P3_ReggieHaseltine"})
+public class P3_ReggieHaseltine extends HttpServlet 
+{
+   SAXParserFactory factory;
+    
+   public void init() throws ServletException 
+   {
+   
+      // create an instance of SAXParserFactory
+      factory = SAXParserFactory.newInstance();
+   }
+
+    /**
+     * Processes requests for both HTTP
+     * <code>GET</code> and
+     * <code>POST</code> methods.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException 
+    {
+        response.setContentType("text/html;charset=UTF-8");
+        // set up output stream
+	PrintWriter out = response.getWriter();
+   
+        // set up DB query
+        String query = "SELECT c.department,c.course_num,c.title,t.technology " +
+                       "  FROM courses c, technologies t " +
+                       " WHERE c.department=t.department " +
+                       "   AND c.course_num=t.course_num";
+
+        // register driver
+        try {
+             //Class.forName("oracle.jdbc.driver.OracleDriver"); // Oracle's thin driver
+            Class.forName("sun.jdbc.odbc.JdbcOdbcDriver"); // Sun's JDBC/ODBC bridge driver
+
+            // connect to DB
+            try {
+                Connection con = DriverManager.getConnection(
+                                    "jdbc:odbc:CMIS", // JDBC/ODBC bridge driver
+                                    "yourVMUserID",
+                                    "yourVMUserPWD");
+        
+
+                 // perform query
+                try 
+                {
+                    Statement stmt = con.createStatement();
+                    ResultSet rs = stmt.executeQuery(query);
+            
+                    // start writing out XML file for browser
+                    String xml = "<?xml version=\"1.0\"?>";
+                    xml = xml + "<course_description>";
+                    xml = xml + "<course>";
+
+                    // get data from result set and add to XML file
+                    boolean courseDataDone = false;
+                    while (rs.next()) 
+                    {
+                        String department = rs.getString(1);
+                        String course_num = rs.getString(2);
+                        String title = rs.getString(3);
+                        String technology = rs.getString(4);
+
+                        if (!courseDataDone) 
+                        {
+                            xml = xml + "<department>" + department + "</department>" +
+                                  "<course_num>" + course_num + "</course_num>" +
+                                  "<title>" + title + "</title>" + 
+                                  "<technologies>";
+                            courseDataDone = true;
+                        }
+   
+                        xml = xml + "<technology>" + technology + "</technology>";
+      
+                    }
+
+                    // close up open XML file elements
+                    xml = xml + "</technologies>" +
+                          "</course>" +
+                          "</course_description>";
+
+                    // use parser to check that the XML docoment is well-formed
+                    try 
+                    {
+                        SAXParser parser = factory.newSAXParser();
+                        InputSource input = new InputSource(new StringReader(xml));
+                        parser.parse(input, new DefaultHandler());
+                    } 
+                    catch (ParserConfigurationException e) 
+                    {
+                        throw new ServletException(e);
+                    } 
+                    catch (SAXException e) 
+                    {
+                        throw new ServletException(e);
+                    }
+
+                    // send the XML document
+                    response.setContentType("text/xml");
+                    out.write(xml);
+
+                } 
+                catch(Exception ex) 
+                {
+                    out.println("Error performing query: " + ex);
+                    con.close();
+                    return;
+                }
+
+            } 
+            catch(Exception ex) 
+            {
+                out.println("Error performing DB connection: " + ex);
+                return;
+            }
+
+ 	} 
+        catch(Exception ex) 
+        {
+            out.println("Can't load driver: " + ex);
+            return;
+        }
+   }
+
+    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
+    /**
+     * Handles the HTTP
+     * <code>GET</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException 
+    {
+        processRequest(request, response);
+    }
+
+    /**
+     * Handles the HTTP
+     * <code>POST</code> method.
+     *
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException 
+    {
+        processRequest(request, response);
+    }
+
+    /**
+     * Returns a short description of the servlet.
+     *
+     * @return a String containing servlet description
+     */
+    @Override
+    public String getServletInfo() 
+    {
+        return "Short description";
+    }// </editor-fold>
+}
