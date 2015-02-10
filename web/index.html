@@ -1,19 +1,66 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
+<!-- Class: <CMIS485 6380 Web Database Development (2152) >
+Student Name: David Walters
+Instructor: <Dr. Alla Webb>
+Assignment #: Project 3
+Description: This application displays Sales data entered into the Oracle Database.
+Due Date :<2/15/15>
+I pledge that I have completed the programming assignment independently.
+I have not copied the code from a student or any source.
+I have not given my code to any student.
+Sign here: <David Walters>
+Additional Comments:<index.html is the landing page for the application, but no servlet
+ functionality is displayed on this page.> -->
 <html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
-        <link rel="stylesheet" href="js/libs/twitter-bootstrap/css/bootstrap.css" type="text/css"/>
+   <head>
+      <title>Reston Real Estate - Sales Information</title>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width">
+      <link rel="stylesheet" href="js/libs/twitter-bootstrap/css/bootstrap.css" type="text/css"/>
+      <link rel="stylesheet" href="js/libs/twitter-bootstrap/css/bootstrap-theme.css" type="text/css">
+   </head>
+   <body>
+      <nav class="navbar navbar-default"> <!-- start NavBar -->
+         <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+               <a class="navbar-brand" href="index.html">Reston Real Estate</a>
+            </div>
 
-
-    </head>
-    <body>
-      <div class="container">TODO write codfasdfsdfntent</div>
-    </body>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+               <ul class="nav navbar-nav">
+                  <li><a href="#">Sales <span class="sr-only">(current)</span></a></li>
+               </ul>
+               <form class="navbar-form navbar-left" role="search">
+                  <div class="form-group">
+                     <input type="text" class="form-control" placeholder="Search Sales Data">
+                  </div>
+                  <button type="submit" class="btn btn-default">Submit</button>
+               </form>
+            </div><!-- /.container-fluid -->
+      </nav> <!--end NavBar -->      
+      <div class="container">
+         <div class="jumbotron">
+            <h1>Reston Real Estate</h1>
+            <p>The nation's leading home sales team!</p>
+         </div>
+         <div class="container">
+            <h4>Step 1 - Develop a Student Web Page for RRE, Inc. as a part of your Netbeans project that contains a customer welcome title and an appropriate business graphic.</h4>
+            <p>This page (index.html) displays this requirement</p>
+         </div>
+         <div class="container">
+            <h4>Step 2 - Provide a zip file with the entire Netbeans Project for the "Hello World" Java servlet prior to the Homework #3 due date and verify that it is working when you run your Netbeans Project.</h4>
+            <p>The Hello World servlet functionality can be displayed here: <a href="Helloworld">Hello World!</a></p>
+         </div>
+         <div class="container">
+            <h4>Step 3 - Develop a Java servlet that will produce a list of your sales from your Oracle SALES table in an HTML table sorted by sales price, from lowest to highest.</h4>
+            <p>This functionality is displayed by clicking the Sales link at the top, or clicking the following link: <a href="SalesData">Sales Data</a></p>
+         </div>
+         <div class="container">
+            <h4>Step 4 - Develop a Java servlet that will retrieve your sales data from your Oracle SALES table sorted from lowest to highest sales price and then put this data in an XML file.  Return the XML file with the sorted records to the user on the client.</h4>
+            <p>This functionality is displayed by clicking <button type="button" class="btn btn-info">Export Data</button> on the Sales page. <a href="SalesData">Sales Data</a></p>
+         </div>
+      </div>
+   </body>
 </html>
